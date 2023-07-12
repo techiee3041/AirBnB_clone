@@ -3,6 +3,7 @@
     Module which has Basemodel class
 """
 
+import models
 import uuid
 from datetime import datetime as dt
 import time
@@ -40,6 +41,8 @@ class BaseModel:
                 self.created_at = dt.strptime(kwargs["created_at"], t)
             if hasattr(self, "updated_at") and type(self.updated_at) is str:
                 self.updated_at = dt.strptime(kwargs["updated_at"], t)
+        else:
+            models.storage.new(self)
 
     def __str__(self):
         """
@@ -49,7 +52,8 @@ class BaseModel:
 
     def save(self):
         """Updates the updated_at attribute with the current datetime."""
-        self.updated_at = datetime.datetime.now()
+        self.updated_at = dt.now()
+        models.storage.save()
 
     def to_dict(self):
         """Returns a dictionary representation of the model."""

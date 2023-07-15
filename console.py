@@ -88,10 +88,10 @@ class HBNBCommand(cmd.Cmd):
             Usage: destroy <class> <id>
         """
         args = shlex.split(arg)
-        objs = models.storage.all()
+        objs = st.all()
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] != HBNBCommand.__classes:
+        elif args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         elif len(args) == 1:
             print("** instance id missing **")
@@ -111,7 +111,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         else:
             objects = []
-            for x in models.storage.all().values():
+            for x in st.all().values():
                 if len(args) > 0 and args[0] == x.__class__.__name__:
                     objects.append(x.__str__())
                 elif len(args) == 0:

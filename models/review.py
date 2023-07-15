@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """Module with class Review"""
 
 from models.base_model import BaseModel

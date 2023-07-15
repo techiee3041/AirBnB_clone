@@ -4,7 +4,7 @@
 
 import cmd
 import shlex
-import models
+from models import storage as st
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -58,7 +58,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         else:
             print(eval(line[0])().id)
-            models.storage.save()
+            st.save()
 
     def do_show(self, arg):
         """Prints the string representation of an instance
@@ -67,7 +67,7 @@ class HBNBCommand(cmd.Cmd):
 
         """
         args = shlex.split(arg)
-        objs = models.storage.all()
+        objs = st.all()
         if len(args) == 0:
             print("** class name missing **")
         elif args[0] not in HBNBCommand.__classes:
@@ -81,7 +81,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 instance = objs[instance_key]
                 print(instance)
-                models.storage.save()
+                st.save()
 
     def do_destroy(self, arg):
         """ Deletes an instance based on the class name and id and saves it
@@ -99,7 +99,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
         else:
             del objs[f"{args[0]}.{args[1]}"]
-            models.storage.save()
+            st.save()
 
     def do_all(self, arg):
         """Prints all string representation of all instances.
@@ -121,7 +121,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, arg):
         """Updates an instance"""
         args = shlex.split(arg)
-        dictionary = models.storage.all()
+        dictionary = st.all()
         if len(args) == 0:
             print("** class name missing **")
             return False
@@ -140,7 +140,7 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 3:
             try:
                 type(eval(args[2])) != dict
-            except Exception:
+            except NameError:
                 print("** value missing **")
                 return False
         if len(args) == 4:
@@ -150,7 +150,7 @@ class HBNBCommand(cmd.Cmd):
                 type(dictionary.__class__.__dict__[args[2]])
             else:
                 x.__dict__[args[2]] = args[3]
-        if type(eval(args[2])) == dict:
+        elif type(eval(args[2])) == dict:
             x = dictionary[f"{args[0]}.{args[1]}"]
             for key, value in eval(args[2]).items():
                 if (key in x.__class__.__dict__.keys() and
@@ -159,7 +159,7 @@ class HBNBCommand(cmd.Cmd):
                     x.__dict__[key] = value_type(value)
                 else:
                     x.__dict__[key] = value
-        models.storage.save()
+        st.save()
 
 
 if __name__ == "__main__":
